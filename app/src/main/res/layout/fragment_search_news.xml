@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
 
-
     <EditText
         android:id="@+id/etSearch"
         android:layout_width="0dp"
