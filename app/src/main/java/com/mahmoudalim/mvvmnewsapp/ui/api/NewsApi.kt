@@ -1,6 +1,6 @@
-package com.androiddevs.mvvmnewsapp.ui.api
+package com.mahmoudalim.mvvmnewsapp.ui.api
 
-import com.androiddevs.mvvmnewsapp.ui.util.Constants.Companion.API_KEY
+import com.mahmoudalim.mvvmnewsapp.ui.util.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -8,26 +8,25 @@ import retrofit2.http.Query
 interface NewsApi {
 
 
-@GET("v2/top-headlines")
-suspend fun getBreakingNews(
-    @Query("country")
-     countryCode: String = "us",
-    @Query("page")
-    pageNumber : Int = 1,
-     @Query("apiKey")
-     apikey : String = API_KEY
-) : Response<NewsResponse>
-
+    @GET("v2/top-headlines")
+    suspend fun getBreakingNews(
+        @Query("country")
+        countryCode: String = "us",
+        @Query("page")
+        pageNumber: Int = 1,
+        @Query("apiKey")
+        apiKey: String = API_KEY
+    ): Response<NewsResponse>
 
 
     @GET("v2/everything")
     suspend fun searchNews(
         @Query("q")
-        searchQuery: String ,
+        searchQuery: String,
         @Query("page")
-        pageNumber : Int = 1,
+        pageNumber: Int = 1,
         @Query("apiKey")
-        apikey : String = API_KEY
-    ) : Response<NewsResponse>
+        apiKey: String = API_KEY
+    ): Response<NewsResponse>
 
 }
