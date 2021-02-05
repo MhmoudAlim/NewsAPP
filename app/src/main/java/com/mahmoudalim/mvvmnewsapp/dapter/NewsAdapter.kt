@@ -1,6 +1,5 @@
 package com.mahmoudalim.mvvmnewsapp.ui.dapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mahmoudalim.mvvmnewsapp.R
-import com.mahmoudalim.mvvmnewsapp.ui.models.Article
+import com.mahmoudalim.mvvmnewsapp.models.Article
 import kotlinx.android.synthetic.main.item_article_preview.view.*
 
 class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
@@ -53,8 +52,6 @@ class NewsAdapter : RecyclerView.Adapter<NewsAdapter.ArticleViewHolder>() {
             setOnClickListener {
                 onItemClickListener?.let { it(article) }
             }
-
-
         }
     }
 
