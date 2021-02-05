@@ -2,7 +2,7 @@ package com.mahmoudalim.mvvmnewsapp.ui.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.mahmoudalim.mvvmnewsapp.ui.api.Article
+import com.mahmoudalim.mvvmnewsapp.ui.models.Article
 
 
 @Dao

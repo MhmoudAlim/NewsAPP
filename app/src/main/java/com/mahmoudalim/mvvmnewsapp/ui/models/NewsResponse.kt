@@ -1,4 +1,4 @@
-package com.mahmoudalim.mvvmnewsapp.ui.api
+package com.mahmoudalim.mvvmnewsapp.ui.models
 
 
 data class NewsResponse(
