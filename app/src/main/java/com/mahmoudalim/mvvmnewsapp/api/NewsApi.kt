@@ -1,7 +1,7 @@
-package com.mahmoudalim.mvvmnewsapp.ui.api
+package com.mahmoudalim.mvvmnewsapp.api
 
-import com.mahmoudalim.mvvmnewsapp.ui.models.NewsResponse
-import com.mahmoudalim.mvvmnewsapp.ui.util.Constants.Companion.API_KEY
+import com.mahmoudalim.mvvmnewsapp.models.NewsResponse
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

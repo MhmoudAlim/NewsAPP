@@ -1,4 +1,4 @@
-package com.mahmoudalim.mvvmnewsapp.ui.util
+package com.mahmoudalim.mvvmnewsapp.util
 
 class Constants {
 

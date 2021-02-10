@@ -1,13 +1,16 @@
-package com.mahmoudalim.mvvmnewsapp.ui.models
+package com.mahmoudalim.mvvmnewsapp.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 
-@Entity(tableName = "Articles")
+@Entity(
+    tableName = "articles"
+)
 data class Article(
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null,
+    var id: Int? = null,
     val author: String,
     val content: String,
     val description: String,
@@ -16,4 +19,4 @@ data class Article(
     val title: String,
     val url: String,
     val urlToImage: String
-)
+) : Serializable

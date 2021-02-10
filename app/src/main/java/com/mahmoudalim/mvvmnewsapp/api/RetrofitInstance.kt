@@ -1,6 +1,6 @@
-package com.mahmoudalim.mvvmnewsapp.ui.api
+package com.mahmoudalim.mvvmnewsapp.api
 
-import com.mahmoudalim.mvvmnewsapp.ui.util.Constants.Companion.Base_URL
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Base_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

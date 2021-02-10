@@ -1,4 +1,4 @@
-package com.mahmoudalim.mvvmnewsapp.ui.dapter
+package com.mahmoudalim.mvvmnewsapp.dapter
 
 import android.view.LayoutInflater
 import android.view.View

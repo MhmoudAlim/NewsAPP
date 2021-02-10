@@ -1,4 +1,4 @@
-package com.mahmoudalim.mvvmnewsapp.ui.models
+package com.mahmoudalim.mvvmnewsapp.models
 
 data class Source(
     val id: Any,
