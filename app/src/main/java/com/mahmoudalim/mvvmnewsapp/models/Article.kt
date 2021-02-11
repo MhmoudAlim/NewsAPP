@@ -15,7 +15,7 @@ data class Article(
     val content: String? = null,
     val description: String? = null,
     val publishedAt: String ,
-    val source: Source? = null,
+    val source: Source,
     val title: String,
     val url: String,
     val urlToImage : String? = null

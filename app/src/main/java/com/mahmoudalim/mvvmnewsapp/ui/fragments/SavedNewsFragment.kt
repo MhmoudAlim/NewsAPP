@@ -1,8 +1,9 @@
 package com.mahmoudalim.mvvmnewsapp.ui.fragments
 
+import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isEmpty
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -12,11 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mahmoudalim.mvvmnewsapp.R
 import com.mahmoudalim.mvvmnewsapp.dapter.NewsAdapter
-import com.mahmoudalim.mvvmnewsapp.databinding.FragmentArticleBinding
 import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSavedNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
-import kotlinx.android.synthetic.main.fragment_saved_news.*
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+
 
 class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
 
@@ -44,7 +45,9 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
             })
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            //default swipe directions
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+            //delete on a left swipe
             ItemTouchHelper.LEFT
         ) {
             override fun onMove(
@@ -52,9 +55,8 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return true
+                return false
             }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 val article = newsAdapter.differ.currentList[position]
@@ -65,6 +67,26 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                         viewModel.saveArticle(article)
                     }
                 }.show()
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                RecyclerViewSwipeDecorator.Builder(
+                    c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
+                )
+                    .addBackgroundColor(ContextCompat.getColor(activity as NewsActivity, R.color.colorDelete))
+                    .addActionIcon(R.drawable.ic_baseline_delete_sweep_24)
+                    .create()
+                    .decorate()
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
 
