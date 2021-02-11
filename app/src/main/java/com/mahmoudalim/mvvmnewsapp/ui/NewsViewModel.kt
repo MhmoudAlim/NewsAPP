@@ -3,6 +3,7 @@ package com.mahmoudalim.mvvmnewsapp.ui
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahmoudalim.mvvmnewsapp.models.Article
 import com.mahmoudalim.mvvmnewsapp.models.NewsResponse
 import com.mahmoudalim.mvvmnewsapp.repository.NewsRepository
 import com.mahmoudalim.mvvmnewsapp.util.Resource
@@ -14,6 +15,7 @@ class NewsViewModel(
 ) : ViewModel() {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+
     // pagination is done here not in Fragment so that current page number don't reset in case of rotation
     var breakingNewsPage = 1
 
@@ -26,7 +28,7 @@ class NewsViewModel(
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         breakingNews.postValue(Resource.Loading())
         val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
-         breakingNews.postValue(handleBreakingNewsResponse(response))
+        breakingNews.postValue(handleBreakingNewsResponse(response))
     }
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {
@@ -57,6 +59,12 @@ class NewsViewModel(
         return Resource.Error(response.message())
 
     }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepository.insertOrUpdate(article)
+    }
+
+    fun getSavedNews() = newsRepository.getSavedNews()
 
 
 }

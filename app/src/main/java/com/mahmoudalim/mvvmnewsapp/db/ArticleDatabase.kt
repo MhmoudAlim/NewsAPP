@@ -7,7 +7,7 @@ import com.mahmoudalim.mvvmnewsapp.models.Article
 
 @Database(
     entities = [Article::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(RoomTypeConverter::class)
 abstract class ArticleDatabase : RoomDatabase() {
