@@ -20,5 +20,8 @@ class NewsRepository(val db: ArticleDatabase) {
     //no need for a suspend function because it returns a LiveData
     fun getSavedNews() = db.getArticleDao().getAllArticles()
 
+
+    suspend fun deleteArticle(article: Article) = db.getArticleDao().deleteArticle(article)
+
 }
 
