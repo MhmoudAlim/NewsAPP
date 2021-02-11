@@ -9,4 +9,6 @@ import com.mahmoudalim.mvvmnewsapp.db.ArticleDatabase
    RetrofitInstance.api.getBreakingNews(countryCode, pageNumber)
 
 
+  suspend fun searchNews(searchQuery: String, pageNumber: Int) =
+   RetrofitInstance.api.searchNews(searchQuery, pageNumber)
 }
