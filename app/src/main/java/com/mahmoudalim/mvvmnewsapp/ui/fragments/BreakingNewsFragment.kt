@@ -5,7 +5,9 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.ForeignKey
 import com.mahmoudalim.mvvmnewsapp.R
 import com.mahmoudalim.mvvmnewsapp.dapter.NewsAdapter
 import com.mahmoudalim.mvvmnewsapp.databinding.FragmentBreakingNewsBinding
@@ -19,6 +21,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     lateinit var newsAdapter: NewsAdapter
     private val TAG = "Breaking News Fragment"
     private lateinit var binding: FragmentBreakingNewsBinding
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,7 +52,18 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 }
             }
         })
+
+
+        newsAdapter.setonItemClickListener {
+            val bundle = Bundle().apply {
+                putSerializable("article" , it)
+            }
+            findNavController().navigate(
+                R.id.action_breakingNewsFragment_to_articlesFragment,bundle)
+        }
     }
+
+
 
     private fun hideProgressBar() {
          binding.paginationProgressBar.visibility = View.INVISIBLE
