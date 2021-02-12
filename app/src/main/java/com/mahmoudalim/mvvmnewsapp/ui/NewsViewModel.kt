@@ -10,16 +10,17 @@ import com.mahmoudalim.mvvmnewsapp.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class NewsViewModel(
-    val newsRepository: NewsRepository
-) : ViewModel() {
+class NewsViewModel(val newsRepository: NewsRepository) : ViewModel() {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
 
     // pagination is done here not in Fragment so that current page number don't reset in case of rotation
     var breakingNewsPage = 1
+    var breakingNewsResponse: NewsResponse? = null
 
     val searchNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    var searchNewsPage = 1
+    var searchNewsResponse: NewsResponse? = null
 
     init {
         getBreakingNews("eg")
@@ -40,22 +41,35 @@ class NewsViewModel(
 
     private fun handleBreakingNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                return Resource.Success(resultResponse)
+            response.body()?.let { breakingResultResponse ->
+                breakingNewsPage++
+                if (breakingNewsResponse == null) {
+                    breakingNewsResponse = breakingResultResponse
+                } else {
+                    val oldArticles = breakingNewsResponse?.articles
+                    val newArticles = breakingResultResponse.articles
+                    oldArticles?.addAll(newArticles)
+                }
+                return Resource.Success(breakingNewsResponse ?: breakingResultResponse)
             }
         }
-
         return Resource.Error(response.message())
-
     }
 
     private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-                return Resource.Success(resultResponse)
+            response.body()?.let { searchResultResponse ->
+                breakingNewsPage++
+                if (searchNewsResponse == null) {
+                    searchNewsResponse = searchResultResponse
+                } else {
+                    val oldArticles = searchNewsResponse?.articles
+                    val newArticles = searchResultResponse.articles
+                    oldArticles?.addAll(newArticles)
+                }
+                return Resource.Success(searchNewsResponse ?: searchResultResponse)
             }
         }
-
         return Resource.Error(response.message())
 
     }
