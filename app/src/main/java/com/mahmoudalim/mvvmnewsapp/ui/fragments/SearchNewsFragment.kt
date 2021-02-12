@@ -6,10 +6,13 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mahmoudalim.mvvmnewsapp.R
@@ -20,6 +23,7 @@ import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.SEARCH_DELAY_TIME
 import com.mahmoudalim.mvvmnewsapp.util.Resource
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -40,6 +44,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         binding = FragmentSearchNewsBinding.bind(view)
         binding.paginationProgressBar
         binding.rvSearchNews
+        binding.etSearch
+
 
         viewModel = (activity as NewsActivity).viewModel
 
@@ -55,7 +61,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         viewModel.searchNews(it.toString())
                         view.hideKeyboard()
                     }
-
                 }
             }
 
@@ -80,6 +85,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     hideProgressBar()
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
+                        Toasty.error(activity as NewsActivity, "Error : $errorMessage occurred!", Toast.LENGTH_SHORT, true).show();
+
                     }
                 }
             }

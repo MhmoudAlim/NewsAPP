@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -16,6 +17,7 @@ import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
 import com.mahmoudalim.mvvmnewsapp.util.Resource
+import es.dmoral.toasty.Toasty
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
@@ -56,6 +58,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     hideProgressBar()
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
+                        Toasty.error(activity as NewsActivity, "Error : $errorMessage occurred!", Toast.LENGTH_SHORT, true).show();
+
                     }
                 }
             }

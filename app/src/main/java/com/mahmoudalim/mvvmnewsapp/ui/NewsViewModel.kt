@@ -1,16 +1,28 @@
 package com.mahmoudalim.mvvmnewsapp.ui
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.*
+import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
+import android.net.NetworkCapabilities.TRANSPORT_WIFI
+import android.os.Build
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahmoudalim.mvvmnewsapp.util.MyApplication
 import com.mahmoudalim.mvvmnewsapp.models.Article
 import com.mahmoudalim.mvvmnewsapp.models.NewsResponse
 import com.mahmoudalim.mvvmnewsapp.repository.NewsRepository
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.io.IOException
 
-class NewsViewModel(val newsRepository: NewsRepository) : ViewModel() {
+class NewsViewModel(
+    app: Application,
+    private val newsRepository: NewsRepository
+) : AndroidViewModel(app) {
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
 
@@ -27,15 +39,12 @@ class NewsViewModel(val newsRepository: NewsRepository) : ViewModel() {
     }
 
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
-        breakingNews.postValue(Resource.Loading())
-        val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
-        breakingNews.postValue(handleBreakingNewsResponse(response))
+        safeBreakingNewsCall(countryCode)
+
     }
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {
-        breakingNews.postValue(Resource.Loading())
-        val response = newsRepository.searchNews(searchQuery, breakingNewsPage)
-        searchNews.postValue(handleSearchNewsResponse(response))
+       safeSearchNewsCall(searchQuery)
     }
 
 
@@ -84,5 +93,64 @@ class NewsViewModel(val newsRepository: NewsRepository) : ViewModel() {
         newsRepository.deleteArticle(article)
     }
 
+    private suspend fun safeSearchNewsCall(searchQuery: String){
+        searchNews.postValue(Resource.Loading())
+        try {
+            if (hasInternetConnection()){
+                val response = newsRepository.searchNews(searchQuery, searchNewsPage)
+                searchNews.postValue(handleSearchNewsResponse(response))
+            }else{
+                searchNews.postValue(Resource.Error("Network Error"))
+            }
+        }catch (t: Throwable){
+            when(t){
+                is IOException -> searchNews.postValue(Resource.Error("Network Error"))
+                else -> searchNews.postValue(Resource.Error("An Error Occurred"))
+            }}
+    }
+
+
+    private suspend fun safeBreakingNewsCall(countryCode: String){
+        breakingNews.postValue(Resource.Loading())
+        try {
+            if (hasInternetConnection()){
+            val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
+            breakingNews.postValue(handleBreakingNewsResponse(response))
+            }else{
+                breakingNews.postValue(Resource.Error("Network Error"))
+            }
+        }catch (t: Throwable){
+            when(t){
+                is IOException -> breakingNews.postValue(Resource.Error("Network Error"))
+                else -> breakingNews.postValue(Resource.Error("An Error Occurred"))
+        }}
+    }
+
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication<MyApplication>()
+            .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+//        for api level 23 and above
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val network = connectivityManager.activeNetwork ?: return false
+            val networkCapabilities =
+                connectivityManager.getNetworkCapabilities(network) ?: return false
+            return when {
+                networkCapabilities.hasTransport(TRANSPORT_WIFI) -> true
+                networkCapabilities.hasTransport(TRANSPORT_CELLULAR) -> true
+                else -> false
+            }
+//            for api level < 23
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                return when (type) {
+                    TYPE_MOBILE -> true
+                    TYPE_WIFI -> true
+                    else -> false
+                }
+            }
+        }
+        return false
+    }
 
 }

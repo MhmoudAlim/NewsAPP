@@ -80,4 +80,8 @@ dependencies {
 
     //xabaras - RecyclerViewSwipeDecorator
     implementation 'it.xabaras.android:recyclerview-swipedecorator:1.2.3'
+
+    // toasty
+    implementation 'com.github.GrenderG:Toasty:1.5.0'
+
 }

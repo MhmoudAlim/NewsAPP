@@ -9,6 +9,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.mahmoudalim.mvvmnewsapp.R
 import com.mahmoudalim.mvvmnewsapp.db.ArticleDatabase
 import com.mahmoudalim.mvvmnewsapp.repository.NewsRepository
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_news.*
 
 class NewsActivity : AppCompatActivity() {
@@ -20,9 +21,14 @@ class NewsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_news)
 
         val newsRepository = NewsRepository(ArticleDatabase(this))
-        val viewModelProviderFactory = NewsViewModelProviderFactory(newsRepository)
+        val viewModelProviderFactory = NewsViewModelProviderFactory(application, newsRepository)
         viewModel = ViewModelProvider(this, viewModelProviderFactory).get(NewsViewModel::class.java)
 
         bottomNavigationView.setupWithNavController(newsNavHost.findNavController())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Toasty.Config.reset();
     }
 }
