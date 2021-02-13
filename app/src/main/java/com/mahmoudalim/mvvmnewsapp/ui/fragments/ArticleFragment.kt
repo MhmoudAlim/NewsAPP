@@ -3,13 +3,16 @@ package com.mahmoudalim.mvvmnewsapp.ui.fragments
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebViewClient
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.Placeholder
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
-import com.google.android.material.snackbar.Snackbar
 import com.mahmoudalim.mvvmnewsapp.R
 import com.mahmoudalim.mvvmnewsapp.databinding.FragmentArticleBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
+import es.dmoral.toasty.Toasty
 
 
 class ArticleFragment : Fragment(R.layout.fragment_article){
@@ -22,8 +25,10 @@ class ArticleFragment : Fragment(R.layout.fragment_article){
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentArticleBinding.bind(view)
+        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         binding.webView
         binding.fab
+        binding.articlesProgress
         viewModel = (activity as NewsActivity).viewModel
 
         val article = args.article
@@ -31,12 +36,22 @@ class ArticleFragment : Fragment(R.layout.fragment_article){
         binding.webView.apply {
             webViewClient = WebViewClient()
             loadUrl(article.url)
+            binding.articlesProgress.visibility = View.GONE
+            binding.webView.visibility = View.VISIBLE
+
         }
 
-     binding.fab.setOnClickListener {
+        binding.fab.setOnClickListener {
          viewModel.saveArticle(article)
-         Snackbar.make(view , "Article Saved Successfully" , Snackbar.LENGTH_SHORT).show()
+         Toasty.success(activity as NewsActivity, "Article Saved Successfully", Toast.LENGTH_SHORT, true).show();
+
      }
+
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
 
     }
 }

@@ -7,12 +7,12 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mahmoudalim.mvvmnewsapp.R
@@ -21,6 +21,7 @@ import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSearchNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.SEARCH_DELAY_TIME
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
@@ -39,9 +40,11 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     var isLastPage = false
     var isScrolling = false
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSearchNewsBinding.bind(view)
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         binding.paginationProgressBar
         binding.rvSearchNews
         binding.etSearch
@@ -50,6 +53,8 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         viewModel = (activity as NewsActivity).viewModel
 
         setUpRecyclerView()
+
+
 
         var coroutineJob: Job? = null
         binding.etSearch.addTextChangedListener {
@@ -63,7 +68,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     }
                 }
             }
-
         }
 
         viewModel.searchNews.observe(viewLifecycleOwner, Observer {
@@ -74,10 +78,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     hideProgressBar()
                     it.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
-                        val totalPAges = newsResponse.totalResults / Constants.Query_DEFAULT_PAGE_SIZE + 2
+                        val totalPAges = newsResponse.totalResults / Query_DEFAULT_PAGE_SIZE + 2
                         isLastPage = viewModel.searchNewsPage == totalPAges
-                        if(isLastPage)
-                            binding.rvSearchNews.setPadding(0,0,0,0)
+                        if (isLastPage)
+                            binding.rvSearchNews.setPadding(0, 0, 0, 0)
                     }
                 }
 
@@ -85,28 +89,39 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     hideProgressBar()
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
-                        Toasty.error(activity as NewsActivity, "Error : $errorMessage occurred!", Toast.LENGTH_SHORT, true).show();
+                        Toasty.error(
+                            activity as NewsActivity,
+                            "Error : $errorMessage occurred!",
+                            Toast.LENGTH_SHORT,
+                            true
+                        ).show();
 
                     }
                 }
             }
         })
 
+
+
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
-                putSerializable("article" , it)
+                putSerializable("article", it)
             }
             findNavController().navigate(
-                R.id.action_searchNewsFragment_to_articlesFragment,bundle)
+                R.id.action_searchNewsFragment_to_articlesFragment, bundle
+            )
         }
 
     }
 
+
     private val recyclerScrollListener = object : RecyclerView.OnScrollListener(){
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-            if (newState == SCROLL_STATE_TOUCH_SCROLL)
+            if (newState == SCROLL_STATE_TOUCH_SCROLL) {
                 isScrolling = true
+                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+            }
         }
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
@@ -123,6 +138,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
             val shouldPaginate = isNotLoadingAndNotLastPage && isLAtAstItem && isNotAtBeginning
                     && isTotalMoreThanVisible && isScrolling
+
+
+            if ( dy>0) {
+                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+            } else {
+                (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+            }
 
             if (shouldPaginate){
                 viewModel.searchNews(binding.etSearch.text.toString())

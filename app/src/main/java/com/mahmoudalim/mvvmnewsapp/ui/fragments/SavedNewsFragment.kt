@@ -3,6 +3,7 @@ package com.mahmoudalim.mvvmnewsapp.ui.fragments
 import android.graphics.Canvas
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -28,6 +29,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         viewModel = (activity as NewsActivity).viewModel
         setUpRecyclerView()
 
@@ -44,7 +46,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                 newsAdapter.differ.submitList(it)
             })
 
-        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
             //default swipe directions
             ItemTouchHelper.UP or ItemTouchHelper.DOWN,
             //delete on a left swipe

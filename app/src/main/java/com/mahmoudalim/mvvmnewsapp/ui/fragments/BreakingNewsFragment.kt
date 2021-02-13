@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import android.widget.AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
+
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
@@ -35,10 +37,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         binding = FragmentBreakingNewsBinding.bind(view)
         binding.paginationProgressBar
         binding.rvBreakingNews
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
 
         viewModel = (activity as NewsActivity).viewModel
 
         setUpRecyclerView()
+
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -49,16 +53,21 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     it.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPAges = newsResponse.totalResults / Query_DEFAULT_PAGE_SIZE + 2
-                         isLastPage = viewModel.breakingNewsPage == totalPAges
-                        if(isLastPage)
-                            binding.rvBreakingNews.setPadding(0,0,0,0)
+                        isLastPage = viewModel.breakingNewsPage == totalPAges
+                        if (isLastPage)
+                            binding.rvBreakingNews.setPadding(0, 0, 0, 0)
                     }
                 }
                 is Resource.Error -> {
                     hideProgressBar()
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
-                        Toasty.error(activity as NewsActivity, "Error : $errorMessage occurred!", Toast.LENGTH_SHORT, true).show();
+                        Toasty.error(
+                            activity as NewsActivity,
+                            "Error : $errorMessage occurred!",
+                            Toast.LENGTH_SHORT,
+                            true
+                        ).show();
 
                     }
                 }
@@ -74,15 +83,20 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 R.id.action_breakingNewsFragment_to_articlesFragment, bundle
             )
         }
+
+
     }
 
 
-    private val recyclerScrollListener = object : RecyclerView.OnScrollListener(){
+    private val recyclerScrollListener = object : RecyclerView.OnScrollListener() {
+
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == SCROLL_STATE_TOUCH_SCROLL)
                 isScrolling = true
+                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         }
+
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
 
@@ -97,9 +111,15 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val isTotalMoreThanVisible = totalItemCount >= Query_DEFAULT_PAGE_SIZE
 
             val shouldPaginate = isNotLoadingAndNotLastPage && isLAtAstItem && isNotAtBeginning
-                                     && isTotalMoreThanVisible && isScrolling
+                    && isTotalMoreThanVisible && isScrolling && newsAdapter.itemCount < 100
 
-            if (shouldPaginate){
+//            if ( dy>0) {
+//                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+//            } else if  (dy<0){
+//                (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+//            }
+
+            if (shouldPaginate) {
                 viewModel.getBreakingNews("eg")
                 isScrolling = false
             }

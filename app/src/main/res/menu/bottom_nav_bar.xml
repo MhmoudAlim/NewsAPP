@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Breaking News"
+    <item android:title="@string/breaking_news"
         android:id="@+id/breakingNewsFragment"
         android:icon="@drawable/ic_breaking_news"/>
 
-    <item android:title="Saved News"
+    <item android:title="@string/news_categories"
+        android:id="@+id/categoriesFragment"
+        android:icon="@android:drawable/ic_dialog_dialer"/>
+
+    <item android:title="@string/saved_news"
         android:id="@+id/savedNewsFragment"
         android:icon="@drawable/ic_favorite"/>
 
-    <item android:title="Search News"
+    <item android:title="@string/search_news"
         android:id="@+id/searchNewsFragment"
         android:icon="@android:drawable/ic_search_category_default"/>
 
