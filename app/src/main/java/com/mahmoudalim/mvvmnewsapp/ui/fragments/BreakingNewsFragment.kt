@@ -19,6 +19,7 @@ import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fragment_breaking_news.view.*
 
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
@@ -35,8 +36,14 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBreakingNewsBinding.bind(view)
         binding.paginationProgressBar
-        binding.rvBreakingNews
-        binding.shimmerFrameLayout
+        binding.swipeToRefreshLayout.setOnRefreshListener {
+            showProgressBar()
+            viewModel.getBreakingNews("eg")
+            setUpRecyclerView()
+            hideProgressBar()
+            binding.swipeToRefreshLayout.isRefreshing = false
+        }
+
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         binding.shimmerFrameLayout.startShimmer()
 
@@ -142,6 +149,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE
+        binding.shimmerFrameLayout.visibility = View.VISIBLE
         binding.shimmerFrameLayout.startShimmer()
 
         isLoading = true
