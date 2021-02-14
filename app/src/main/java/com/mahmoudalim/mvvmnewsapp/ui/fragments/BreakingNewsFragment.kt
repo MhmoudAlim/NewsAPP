@@ -38,6 +38,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         binding.rvBreakingNews
         binding.shimmerFrameLayout
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        binding.shimmerFrameLayout.startShimmer()
 
         viewModel = (activity as NewsActivity).viewModel
 
@@ -141,6 +142,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE
+        binding.shimmerFrameLayout.startShimmer()
 
         isLoading = true
     }

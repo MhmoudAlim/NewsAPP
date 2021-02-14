@@ -18,6 +18,7 @@ import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSavedNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
+import okhttp3.internal.notify
 
 
 class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
@@ -29,6 +30,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
+
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         viewModel = (activity as NewsActivity).viewModel
         setUpRecyclerView()
@@ -43,7 +45,14 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         }
 
             viewModel.getSavedNews().observe(viewLifecycleOwner, Observer {
-                newsAdapter.differ.submitList(it)
+                if (it.isEmpty()){
+                    binding.noArticleFlow.visibility = View.VISIBLE
+                    binding.rvSavedNews.visibility = View.GONE
+                }else {
+                    binding.noArticleFlow.visibility = View.GONE
+                    binding.rvSavedNews.visibility = View.VISIBLE
+                    newsAdapter.differ.submitList(it)
+                }
             })
 
             val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(

@@ -8,4 +8,11 @@
     <string name="saved_news">Saved News</string>
     <string name="search_news">Search News</string>
     <string name="add_to_saved_articles">ADD to Saved Articles</string>
+    <string name="published_at">DATE</string>
+    <string name="title">TITLE</string>
+    <string name="source">SOURCE</string>
+    <string name="description">DESCRIPTION</string>
+    <string name="time">TIME</string>
+    <string name="save_articles_tv">Find your Fav Articles here</string>
+    <string name="no_articles_tv">No Articles</string>
 </resources>
