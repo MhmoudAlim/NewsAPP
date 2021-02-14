@@ -31,7 +31,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     var isLastPage = false
     var isScrolling = false
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBreakingNewsBinding.bind(view)
@@ -42,7 +41,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         viewModel = (activity as NewsActivity).viewModel
 
         setUpRecyclerView()
-
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -74,7 +72,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             }
         })
 
-
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
@@ -83,10 +80,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 R.id.action_breakingNewsFragment_to_articlesFragment, bundle
             )
         }
-
-
     }
-
 
     private val recyclerScrollListener = object : RecyclerView.OnScrollListener() {
 
@@ -134,7 +128,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             addOnScrollListener(recyclerScrollListener)
         }
     }
-
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
