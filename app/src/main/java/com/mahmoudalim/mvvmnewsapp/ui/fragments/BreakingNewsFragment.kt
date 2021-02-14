@@ -19,7 +19,6 @@ import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.fragment_breaking_news.view.*
 
 
 class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
@@ -35,6 +34,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBreakingNewsBinding.bind(view)
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Trending in Egypt"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+
         binding.paginationProgressBar
         binding.swipeToRefreshLayout.setOnRefreshListener {
             showProgressBar()
@@ -44,7 +46,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             binding.swipeToRefreshLayout.isRefreshing = false
         }
 
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         binding.shimmerFrameLayout.startShimmer()
 
         viewModel = (activity as NewsActivity).viewModel
@@ -99,7 +100,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             super.onScrollStateChanged(recyclerView, newState)
             if (newState == SCROLL_STATE_TOUCH_SCROLL)
                 isScrolling = true
-                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
         }
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {

@@ -34,12 +34,22 @@ class NewsViewModel(
     var searchNewsPage = 1
     var searchNewsResponse: NewsResponse? = null
 
+    val coronaNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
+    var coronaNewsPage = 1
+    var coronaNewsResponse: NewsResponse? = null
+
     init {
         getBreakingNews("eg")
+        coronaNews("covid")
     }
 
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         safeBreakingNewsCall(countryCode)
+
+    }
+
+    fun coronaNews(searchQuery: String) = viewModelScope.launch {
+        safeCoronaNewsCall(searchQuery)
 
     }
 
@@ -68,14 +78,6 @@ class NewsViewModel(
     private fun handleSearchNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
         if (response.isSuccessful) {
             response.body()?.let { searchResultResponse ->
-//                breakingNewsPage++
-//                if (searchNewsResponse == null) {
-//                    searchNewsResponse = searchResultResponse
-//                } else {
-//                    val oldArticles = searchNewsResponse?.articles
-//                    val newArticles = searchResultResponse.articles
-//                    oldArticles?.addAll(newArticles)
-//                }
                 return Resource.Success(searchNewsResponse ?: searchResultResponse)
             }
         }
@@ -83,14 +85,15 @@ class NewsViewModel(
 
     }
 
-    fun saveArticle(article: Article) = viewModelScope.launch {
-        newsRepository.insertOrUpdate(article)
-    }
 
-    fun getSavedNews() = newsRepository.getSavedNews()
+    private fun handCoronaNewsResponse(response: Response<NewsResponse>): Resource<NewsResponse> {
+        if (response.isSuccessful) {
+            response.body()?.let { coronaResultResponse ->
+                return Resource.Success(coronaNewsResponse ?: coronaResultResponse)
+            }
+        }
+        return Resource.Error(response.message())
 
-    fun deleteArticle(article: Article) = viewModelScope.launch {
-        newsRepository.deleteArticle(article)
     }
 
     private suspend fun safeSearchNewsCall(searchQuery: String){
@@ -109,6 +112,22 @@ class NewsViewModel(
             }}
     }
 
+    private suspend fun safeCoronaNewsCall(searchQuery: String){
+        coronaNews.postValue(Resource.Loading())
+        try {
+            if (hasInternetConnection()){
+                val response = newsRepository.coronaNews(searchQuery, coronaNewsPage)
+                coronaNews.postValue(handleSearchNewsResponse(response))
+            }else{
+                coronaNews.postValue(Resource.Error("Network Error"))
+            }
+        }catch (t: Throwable){
+            when(t){
+                is IOException -> coronaNews.postValue(Resource.Error("Network Error"))
+                else -> coronaNews.postValue(Resource.Error("An Error Occurred"))
+            }}
+    }
+
 
     private suspend fun safeBreakingNewsCall(countryCode: String){
         breakingNews.postValue(Resource.Loading())
@@ -124,6 +143,16 @@ class NewsViewModel(
                 is IOException -> breakingNews.postValue(Resource.Error("Network Error"))
                 else -> breakingNews.postValue(Resource.Error("An Error Occurred"))
         }}
+    }
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepository.insertOrUpdate(article)
+    }
+
+    fun getSavedNews() = newsRepository.getSavedNews()
+
+    fun deleteArticle(article: Article) = viewModelScope.launch {
+        newsRepository.deleteArticle(article)
     }
 
     private fun hasInternetConnection(): Boolean {
