@@ -36,11 +36,10 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         binding = FragmentBreakingNewsBinding.bind(view)
         binding.paginationProgressBar
         binding.rvBreakingNews
+        binding.shimmerFrameLayout
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
 
         viewModel = (activity as NewsActivity).viewModel
-
-        setUpRecyclerView()
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -48,6 +47,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
                 is Resource.Success -> {
                     hideProgressBar()
+                    binding.rvBreakingNews.visibility = View.VISIBLE
+
                     it.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
                         val totalPAges = newsResponse.totalResults / Query_DEFAULT_PAGE_SIZE + 2
@@ -58,6 +59,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 }
                 is Resource.Error -> {
                     hideProgressBar()
+                    binding.errorImage.visibility = View.VISIBLE
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
                         Toasty.error(
@@ -66,11 +68,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                             Toast.LENGTH_SHORT,
                             true
                         ).show();
-
                     }
                 }
             }
         })
+
+        setUpRecyclerView()
 
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
@@ -131,11 +134,14 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding.shimmerFrameLayout.stopShimmer()
+        binding.shimmerFrameLayout.visibility = View.GONE
         isLoading = false
     }
 
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE
+
         isLoading = true
     }
 }

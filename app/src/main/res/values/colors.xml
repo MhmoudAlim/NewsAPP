@@ -7,5 +7,6 @@
     <color name="just_black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="BG_white">#DCDCDC</color>
+    <color name="BG_shimmer">#A6A6A6</color>
 
 </resources>

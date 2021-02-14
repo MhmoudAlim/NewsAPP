@@ -37,7 +37,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     private lateinit var binding: FragmentSearchNewsBinding
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -79,6 +78,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                 delay(SEARCH_DELAY_TIME)
                 it?.let {
                     if (it.toString().isNotEmpty()) {
+                        binding.searchTV.text = it.toString()
                         viewModel.searchNews(it.toString())
                         view.hideKeyboard()
                         binding.IvSearch.visibility = View.GONE
@@ -97,6 +97,13 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                     hideProgressBar()
                     it.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
+                        if (newsResponse.articles.toList().isEmpty())
+                            Toasty.info(
+                                activity as NewsActivity,
+                                "No Result, try another Keyword!",
+                                Toast.LENGTH_SHORT,
+                                true
+                            ).show()
                         binding.rvSearchNews.setPadding(0, 0, 0, 0)
                     }
                 }
@@ -137,10 +144,15 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
+        binding.shimmerFrameLayout.stopShimmer()
+        binding.shimmerFrameLayout.visibility = View.GONE
+        binding.rvSearchNews.visibility = View.VISIBLE
     }
 
     private fun showProgressBar() {
         binding.paginationProgressBar.visibility = View.VISIBLE
+        binding.shimmerFrameLayout.startShimmer()
+        binding.shimmerFrameLayout.visibility = View.VISIBLE
     }
 
     private fun View.hideKeyboard() {
