@@ -43,6 +43,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             viewModel.getBreakingNews("eg")
             setUpRecyclerView()
             hideProgressBar()
+            binding.errorImage.visibility = View.GONE
             binding.swipeToRefreshLayout.isRefreshing = false
         }
 
@@ -57,6 +58,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 is Resource.Success -> {
                     hideProgressBar()
                     binding.rvBreakingNews.visibility = View.VISIBLE
+                    binding.errorImage.visibility = View.GONE
 
                     it.data?.let { newsResponse ->
                         newsAdapter.differ.submitList(newsResponse.articles.toList())
@@ -69,11 +71,12 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 is Resource.Error -> {
                     hideProgressBar()
                     binding.errorImage.visibility = View.VISIBLE
+                    binding.rvBreakingNews.visibility = View.VISIBLE
                     it.message?.let { errorMessage ->
                         Log.i(TAG, "Error : $errorMessage ")
                         Toasty.error(
                             activity as NewsActivity,
-                            "Error : $errorMessage occurred!",
+                            "Error : $errorMessage too many requests!",
                             Toast.LENGTH_SHORT,
                             true
                         ).show();
@@ -116,7 +119,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             val isTotalMoreThanVisible = totalItemCount >= Query_DEFAULT_PAGE_SIZE
 
             val shouldPaginate = isNotLoadingAndNotLastPage && isLAtAstItem && isNotAtBeginning
-                    && isTotalMoreThanVisible && isScrolling && newsAdapter.itemCount < 100
+                    && isTotalMoreThanVisible && isScrolling
+                    && newsAdapter.itemCount < 99
 
 //            if ( dy>0) {
 //                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()

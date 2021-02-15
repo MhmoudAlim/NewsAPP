@@ -1,5 +1,6 @@
 package com.mahmoudalim.mvvmnewsapp.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.webkit.WebViewClient
@@ -21,6 +22,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article){
     private lateinit var binding: FragmentArticleBinding
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentArticleBinding.bind(view)
@@ -35,6 +37,8 @@ class ArticleFragment : Fragment(R.layout.fragment_article){
         binding.webView.apply {
             webViewClient = WebViewClient()
             loadUrl(article.url)
+            settings.javaScriptEnabled = true
+            settings.javaScriptCanOpenWindowsAutomatically = true
             binding.articlesProgress.visibility = View.GONE
             binding.webView.visibility = View.VISIBLE
 
