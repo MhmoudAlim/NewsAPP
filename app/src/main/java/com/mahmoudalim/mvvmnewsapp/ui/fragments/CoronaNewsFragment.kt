@@ -33,6 +33,7 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
         binding.swipeToRefreshLayout.setOnRefreshListener {
             showProgressBar()
+            viewModel.coronaNewsPage++
             viewModel.coronaNews("covid")
             setUpRecyclerView()
             hideProgressBar()
@@ -64,7 +65,7 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
                         Log.i(TAG, "Error : $errorMessage ")
                         Toasty.error(
                             activity as NewsActivity,
-                            "Error : $errorMessage occurred!",
+                            "Error : $errorMessage too many requests!\nplease restart the app!",
                             Toast.LENGTH_SHORT,
                             true
                         ).show();

@@ -2,6 +2,7 @@ package com.mahmoudalim.mvvmnewsapp.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.service.autofill.OnClickAction
 import android.util.Log
 
 import android.view.View

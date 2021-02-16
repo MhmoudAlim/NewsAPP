@@ -76,7 +76,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                         Log.i(TAG, "Error : $errorMessage ")
                         Toasty.error(
                             activity as NewsActivity,
-                            "Error : $errorMessage too many requests!",
+                            "Error : $errorMessage too many requests!\nplease restart the app!",
                             Toast.LENGTH_SHORT,
                             true
                         ).show();
@@ -84,8 +84,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 }
             }
         })
-
         setUpRecyclerView()
+
 
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
@@ -120,7 +120,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
             val shouldPaginate = isNotLoadingAndNotLastPage && isLAtAstItem && isNotAtBeginning
                     && isTotalMoreThanVisible && isScrolling
-                    && newsAdapter.itemCount < 99
+
 
             if (shouldPaginate) {
                 viewModel.getBreakingNews("eg")

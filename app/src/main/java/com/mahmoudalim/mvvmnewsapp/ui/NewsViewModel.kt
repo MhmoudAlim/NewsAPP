@@ -64,7 +64,7 @@ class NewsViewModel(
                 breakingNewsPage++
                 if (breakingNewsResponse == null) {
                     breakingNewsResponse = breakingResultResponse
-                } else {
+                } else{
                     val oldArticles = breakingNewsResponse?.articles
                     val newArticles = breakingResultResponse.articles
                     oldArticles?.addAll(newArticles)
@@ -117,7 +117,7 @@ class NewsViewModel(
         try {
             if (hasInternetConnection()){
                 val response = newsRepository.coronaNews(searchQuery, coronaNewsPage)
-                coronaNews.postValue(handleSearchNewsResponse(response))
+                coronaNews.postValue(handCoronaNewsResponse(response))
             }else{
                 coronaNews.postValue(Resource.Error("Network Error"))
             }
