@@ -5,7 +5,6 @@ import android.view.View
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.Placeholder
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import com.mahmoudalim.mvvmnewsapp.R

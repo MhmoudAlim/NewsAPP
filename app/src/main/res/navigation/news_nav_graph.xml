@@ -50,11 +50,11 @@
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
-        android:id="@+id/categoriesFragment"
-        android:name="com.mahmoudalim.mvvmnewsapp.ui.fragments.CategoriesFragment"
+        android:id="@+id/CoronaNewsFragment"
+        android:name="com.mahmoudalim.mvvmnewsapp.ui.fragments.CoronaNewsFragment"
         android:label="CategoriesFragment" >
         <action
-            android:id="@+id/action_categoriesFragment_to_articlesFragment"
+            android:id="@+id/action_coronaNewsFragment_to_articlesFragment"
             app:destination="@id/articlesFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"

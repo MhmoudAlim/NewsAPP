@@ -13,6 +13,9 @@ class NewsRepository(val db: ArticleDatabase) {
     suspend fun searchNews(searchQuery: String, pageNumber: Int) =
         RetrofitInstance.api.searchNews(searchQuery, pageNumber)
 
+    suspend fun coronaNews(searchQuery: String, pageNumber: Int) =
+        RetrofitInstance.api.coronaNews(searchQuery, pageNumber)
+
 
     suspend fun insertOrUpdate(article: Article) =
         db.getArticleDao().insertOrUpdate(article)

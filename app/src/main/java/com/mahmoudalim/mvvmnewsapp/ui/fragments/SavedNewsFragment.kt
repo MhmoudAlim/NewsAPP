@@ -18,7 +18,6 @@ import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSavedNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
-import okhttp3.internal.notify
 
 
 class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
@@ -30,8 +29,9 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
-
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Saved Articles"
         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+
         viewModel = (activity as NewsActivity).viewModel
         setUpRecyclerView()
 
@@ -76,6 +76,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                     setAction("Undo") {
                         //resave the deleted article again
                         viewModel.saveArticle(article)
+                        setUpRecyclerView()
                     }
                 }.show()
             }
