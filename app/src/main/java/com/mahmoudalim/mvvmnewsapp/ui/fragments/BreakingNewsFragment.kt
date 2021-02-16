@@ -122,12 +122,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                     && isTotalMoreThanVisible && isScrolling
                     && newsAdapter.itemCount < 99
 
-//            if ( dy>0) {
-//                (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-//            } else if  (dy<0){
-//                (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-//            }
-
             if (shouldPaginate) {
                 viewModel.getBreakingNews("eg")
                 isScrolling = false

@@ -6,6 +6,7 @@ import android.util.Log
 
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
@@ -13,9 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
-import com.mahmoudalim.mvvmnewsapp.R
+import androidx.recyclerview.widget.RecyclerView
+import com.mahmoudalim.mvvmnewsapp.*
 import com.mahmoudalim.mvvmnewsapp.dapter.NewsAdapter
 import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSearchNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
@@ -41,23 +41,27 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSearchNewsBinding.bind(view)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-        binding.paginationProgressBar
-        binding.rvSearchNews
+
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Search News"
+
+        binding.searchBar.slideDown(1000L, 10L)
         binding.etArrow.visibility = View.GONE
         binding.etSearch.visibility = View.GONE
         binding.IvSearch.visibility = View.VISIBLE
+        binding.searchTV.visibility = View.VISIBLE
+
 
         binding.iconSearch.setOnClickListener() {
             binding.etSearch.visibility = View.VISIBLE
             binding.etArrow.visibility = View.VISIBLE
-            YoYo.with(Techniques.Shake).duration(1000).repeat(0).playOn(binding.etSearch)
+            binding.etSearch.slideInRight(100L, 10L)
+
             binding.searchTV.visibility = View.GONE
         }
 
         binding.etArrow.setOnClickListener() {
+            binding.etSearch.slideOutLift(200L, 20L)
             binding.etSearch.visibility = View.GONE
-            YoYo.with(Techniques.RotateInUpLeft).duration(1000).repeat(0).playOn(binding.etArrow)
             binding.searchTV.visibility = View.VISIBLE
             binding.etArrow.visibility = View.GONE
             view.hideKeyboard()
@@ -134,11 +138,37 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     }
 
+    var isScrolling = false
+    private val recyclerScrollListener = object : RecyclerView.OnScrollListener() {
+
+        override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+            super.onScrolled(recyclerView, dx, dy)
+            if (dy > 0 && isScrolling) {
+                binding.searchBar.visibility = View.GONE
+            } else {
+                binding.searchBar.visibility = View.VISIBLE
+
+            }
+
+        }
+
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL)
+                isScrolling = true
+        }
+
+
+    }
+
+
     private fun setUpRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvSearchNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
+            addOnScrollListener(recyclerScrollListener)
+
         }
     }
 
