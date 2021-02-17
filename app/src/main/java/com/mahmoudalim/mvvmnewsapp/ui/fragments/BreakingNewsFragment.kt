@@ -72,7 +72,9 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
         })
         setUpRecyclerView()
 
+    }
 
+    private fun onArticleClick() {
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
@@ -122,6 +124,7 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
         binding.swipeToRefreshLayout.setOnRefreshListener {
             showProgressBar()
+            onArticleClick()
             viewModel.getBreakingNews("eg")
             setUpRecyclerView()
             hideProgressBar()
@@ -139,6 +142,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
             layoutManager = LinearLayoutManager(activity)
             addOnScrollListener(recyclerScrollListener)
         }
+        onArticleClick()
+
     }
 
     private fun hideProgressBar() {

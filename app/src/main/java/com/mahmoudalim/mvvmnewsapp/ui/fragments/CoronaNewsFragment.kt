@@ -62,6 +62,9 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
 
         setUpRecyclerView()
 
+    }
+
+    private fun onArticleClikck() {
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
                 putSerializable("article", it)
@@ -96,8 +99,8 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
         binding.rvCoronaNews.apply {
             adapter = newsAdapter
             layoutManager = LinearLayoutManager(activity)
-
         }
+        onArticleClikck()
     }
 
     private fun hideProgressBar() {
