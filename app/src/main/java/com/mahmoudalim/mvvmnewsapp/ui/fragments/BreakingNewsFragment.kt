@@ -17,6 +17,7 @@ import com.mahmoudalim.mvvmnewsapp.databinding.FragmentBreakingNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.Query_DEFAULT_PAGE_SIZE
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.TAG
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
 
@@ -25,7 +26,6 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
 
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
-    private val TAG = "Breaking News Fragment"
     private lateinit var binding: FragmentBreakingNewsBinding
     var isLoading = false
     var isLastPage = false
@@ -34,22 +34,8 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentBreakingNewsBinding.bind(view)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Trending in Egypt"
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        inItLayout()
 
-        binding.paginationProgressBar
-        binding.swipeToRefreshLayout.setOnRefreshListener {
-            showProgressBar()
-            viewModel.getBreakingNews("eg")
-            setUpRecyclerView()
-            hideProgressBar()
-            binding.errorImage.visibility = View.GONE
-            binding.swipeToRefreshLayout.isRefreshing = false
-        }
-
-        binding.shimmerFrameLayout.startShimmer()
-
-        viewModel = (activity as NewsActivity).viewModel
 
         viewModel.breakingNews.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -127,6 +113,23 @@ class BreakingNewsFragment : Fragment(R.layout.fragment_breaking_news) {
                 isScrolling = false
             }
         }
+    }
+
+    private fun inItLayout() {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Trending in Egypt"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        viewModel = (activity as NewsActivity).viewModel
+
+        binding.swipeToRefreshLayout.setOnRefreshListener {
+            showProgressBar()
+            viewModel.getBreakingNews("eg")
+            setUpRecyclerView()
+            hideProgressBar()
+            binding.errorImage.visibility = View.GONE
+            binding.swipeToRefreshLayout.isRefreshing = false
+        }
+
+        binding.shimmerFrameLayout.startShimmer()
     }
 
     private fun setUpRecyclerView() {

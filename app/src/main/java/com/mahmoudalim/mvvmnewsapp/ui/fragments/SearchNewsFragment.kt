@@ -22,6 +22,7 @@ import com.mahmoudalim.mvvmnewsapp.databinding.FragmentSearchNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
 import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.SEARCH_DELAY_TIME
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.TAG
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Job
@@ -34,7 +35,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
-    private val TAG = "Search News Fragment"
     private lateinit var binding: FragmentSearchNewsBinding
 
 
@@ -45,33 +45,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
         (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Search News"
 
-        binding.searchBar.slideDown(1000L, 10L)
-        binding.etArrow.visibility = View.GONE
-        binding.etSearch.visibility = View.GONE
-        binding.IvSearch.visibility = View.VISIBLE
-        binding.searchTV.visibility = View.VISIBLE
-
-
-        binding.iconSearch.setOnClickListener() {
-            binding.etSearch.visibility = View.VISIBLE
-            binding.etArrow.visibility = View.VISIBLE
-            binding.etSearch.slideInRight(100L, 10L)
-
-            binding.searchTV.visibility = View.GONE
-        }
-
-        binding.etArrow.setOnClickListener() {
-            binding.etSearch.slideOutLift(200L, 20L)
-            binding.etSearch.visibility = View.GONE
-            binding.searchTV.visibility = View.VISIBLE
-            binding.etArrow.visibility = View.GONE
-            view.hideKeyboard()
-            binding.rvSearchNews.removeAllViews()
-        }
-
-        viewModel = (activity as NewsActivity).viewModel
-
         setUpRecyclerView()
+        inItLayout(view)
+
+
 
         var coroutineJob: Job? = null
         binding.etSearch.addTextChangedListener {
@@ -140,6 +117,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     }
 
     var isScrolling = false
+
     private val recyclerScrollListener = object : RecyclerView.OnScrollListener() {
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -161,8 +139,6 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
 
     }
-
-
     private fun setUpRecyclerView() {
         newsAdapter = NewsAdapter()
         binding.rvSearchNews.apply {
@@ -172,6 +148,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
 
         }
     }
+
 
     private fun hideProgressBar() {
         binding.paginationProgressBar.visibility = View.INVISIBLE
@@ -186,6 +163,34 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         binding.shimmerFrameLayout.visibility = View.VISIBLE
     }
 
+    private fun inItLayout(view: View) {
+        viewModel = (activity as NewsActivity).viewModel
+
+        binding.searchBar.slideDown(100L, 10)
+        binding.etArrow.visibility = View.GONE
+        binding.etSearch.visibility = View.GONE
+        binding.IvSearch.visibility = View.VISIBLE
+        binding.searchTV.visibility = View.VISIBLE
+
+
+        binding.iconSearch.setOnClickListener {
+            binding.etSearch.visibility = View.VISIBLE
+            binding.etArrow.visibility = View.VISIBLE
+            binding.etSearch.slideInRight(100L, 10L)
+
+            binding.searchTV.visibility = View.GONE
+        }
+
+        binding.etArrow.setOnClickListener() {
+            binding.etSearch.slideOutLift(200L, 20L)
+            binding.etSearch.visibility = View.GONE
+            binding.searchTV.visibility = View.VISIBLE
+            binding.etArrow.visibility = View.GONE
+            view.hideKeyboard()
+            binding.rvSearchNews.removeAllViews()
+        }
+    }
+
     private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
@@ -195,6 +200,4 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         super.onDetach()
         onDestroyView()
     }
-
-
 }

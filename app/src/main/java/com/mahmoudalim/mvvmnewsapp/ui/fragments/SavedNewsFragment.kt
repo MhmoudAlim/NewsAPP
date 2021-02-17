@@ -29,11 +29,7 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentSavedNewsBinding.bind(view)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Saved Articles"
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-
-        viewModel = (activity as NewsActivity).viewModel
-        setUpRecyclerView()
+        inItLAyout()
 
         newsAdapter.setonItemClickListener {
             val bundle = Bundle().apply {
@@ -93,8 +89,8 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
                 RecyclerViewSwipeDecorator.Builder(
                     c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive
                 )
-                    .addBackgroundColor(ContextCompat.getColor(activity as NewsActivity, R.color.colorDelete))
                     .addActionIcon(R.drawable.ic_baseline_delete_sweep_24)
+                    .addBackgroundColor(ContextCompat.getColor(activity as NewsActivity, R.color.colorDelete))
                     .create()
                     .decorate()
 
@@ -105,6 +101,14 @@ class SavedNewsFragment : Fragment(R.layout.fragment_saved_news) {
         ItemTouchHelper(itemTouchHelperCallback).apply {
             attachToRecyclerView(binding.rvSavedNews)
         }
+    }
+
+    private fun inItLAyout() {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "Saved Articles"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+
+        viewModel = (activity as NewsActivity).viewModel
+        setUpRecyclerView()
     }
 
     private fun setUpRecyclerView() {

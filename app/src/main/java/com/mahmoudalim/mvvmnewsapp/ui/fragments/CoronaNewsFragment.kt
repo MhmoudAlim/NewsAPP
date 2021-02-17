@@ -14,6 +14,7 @@ import com.mahmoudalim.mvvmnewsapp.dapter.NewsAdapter
 import com.mahmoudalim.mvvmnewsapp.databinding.FragmentCoronaNewsBinding
 import com.mahmoudalim.mvvmnewsapp.ui.NewsActivity
 import com.mahmoudalim.mvvmnewsapp.ui.NewsViewModel
+import com.mahmoudalim.mvvmnewsapp.util.Constants.Companion.TAG
 import com.mahmoudalim.mvvmnewsapp.util.Resource
 import es.dmoral.toasty.Toasty
 
@@ -22,28 +23,13 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
 
     lateinit var viewModel: NewsViewModel
     lateinit var newsAdapter: NewsAdapter
-    private val TAG = "Corona News Fragment"
     private lateinit var binding: FragmentCoronaNewsBinding
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentCoronaNewsBinding.bind(view)
-        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "COVID19 Latest News"
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-        binding.swipeToRefreshLayout.setOnRefreshListener {
-            showProgressBar()
-            viewModel.coronaNewsPage++
-            viewModel.coronaNews("covid")
-            setUpRecyclerView()
-            hideProgressBar()
-            binding.swipeToRefreshLayout.isRefreshing = false
-        }
-
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-        binding.shimmerFrameLayout.startShimmer()
-
-        viewModel = (activity as NewsActivity).viewModel
+        inItLayout()
 
         viewModel.coronaNews.observe(viewLifecycleOwner, Observer {
             when (it) {
@@ -84,6 +70,24 @@ class CoronaNewsFragment : Fragment(R.layout.fragment_corona_news) {
                 R.id.action_coronaNewsFragment_to_articlesFragment, bundle
             )
         }
+    }
+
+    private fun inItLayout() {
+        (activity as AppCompatActivity?)!!.supportActionBar!!.title = "COVID19 Latest News"
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        binding.swipeToRefreshLayout.setOnRefreshListener {
+            showProgressBar()
+            viewModel.coronaNewsPage++
+            viewModel.coronaNews("covid")
+            setUpRecyclerView()
+            hideProgressBar()
+            binding.swipeToRefreshLayout.isRefreshing = false
+        }
+
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        binding.shimmerFrameLayout.startShimmer()
+
+        viewModel = (activity as NewsActivity).viewModel
     }
 
 
