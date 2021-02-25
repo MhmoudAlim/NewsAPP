@@ -21,7 +21,6 @@ class ArticleFragment : Fragment(R.layout.fragment_article){
     val args: ArticleFragmentArgs by navArgs()
     private lateinit var binding: FragmentArticleBinding
 
-
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
